@@ -1,0 +1,105 @@
+/*
+	DS5_Input.h is part of DualSenseWindows
+	https://github.com/Ohjurot/DualSense-Windows
+
+	Contributors of this file:
+	11.2020 Ludwig Füchsl
+
+	Licensed under the MIT License (To be found in repository root directory)
+*/
+module ds5w.ds5input;
+
+import ds5w.dswapi;
+import ds5w.device;
+import ds5w.ds5state;
+
+import core.stdc.string;
+
+void evaluateHidInputBuffer(ubyte* hidInBuffer, DS5InputState* ptrInputState)
+{
+    // Convert sticks to signed range
+    ptrInputState.leftStick.x = cast(ubyte)((cast(short)(hidInBuffer[0x00] - 128)));
+    ptrInputState.leftStick.y = cast(ubyte)((cast(short)(hidInBuffer[0x01] - 127)) * -1);
+    ptrInputState.rightStick.x = cast(ubyte)((cast(short)(hidInBuffer[0x02] - 128)));
+    ptrInputState.rightStick.y = cast(ubyte)((cast(short)(hidInBuffer[0x03] - 127)) * -1);
+
+    // Convert trigger to unsigned range
+    ptrInputState.leftTrigger = hidInBuffer[0x04];
+    ptrInputState.rightTrigger = hidInBuffer[0x05];
+
+    // Buttons
+    ptrInputState.buttonsAndDpad = hidInBuffer[0x07] & 0xF0;
+    ptrInputState.buttonsA = hidInBuffer[0x08];
+    ptrInputState.buttonsB = hidInBuffer[0x09];
+
+    // Dpad
+    switch (hidInBuffer[0x07] & 0x0F)
+    {
+        // Up
+    case 0x0:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_UP;
+        break;
+        // Down
+    case 0x4:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_DOWN;
+        break;
+        // Left
+    case 0x6:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT;
+        break;
+        // Right
+    case 0x2:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT;
+        break;
+        // Left Down
+    case 0x5:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT | DS5W_ISTATE_DPAD_DOWN;
+        break;
+        // Left Up
+    case 0x7:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT | DS5W_ISTATE_DPAD_UP;
+        break;
+        // Right Up
+    case 0x1:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT | DS5W_ISTATE_DPAD_UP;
+        break;
+        // Right Down
+    case 0x3:
+        ptrInputState.buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT | DS5W_ISTATE_DPAD_DOWN;
+        break;
+    default:
+        break;
+    }
+
+    // Copy accelerometer readings
+    memcpy(&ptrInputState.accelerometer, &hidInBuffer[0x0F], 2 * 3);
+
+    //TEMP: Copy gyro data (no processing currently done!)
+    memcpy(&ptrInputState.gyroscope, &hidInBuffer[0x15], 2 * 3);
+
+    // Evaluate touch state 1
+    uint touchpad1Raw = *cast(uint*)(&hidInBuffer[0x20]);
+    ptrInputState.touchPoint1.y = (touchpad1Raw & 0xFFF00000) >> 20;
+    ptrInputState.touchPoint1.x = (touchpad1Raw & 0x000FFF00) >> 8;
+    ptrInputState.touchPoint1.down = (touchpad1Raw & (1 << 7)) == 0;
+    ptrInputState.touchPoint1.id = (touchpad1Raw & 127);
+
+    // Evaluate touch state 2
+    uint touchpad2Raw = *cast(uint*)(&hidInBuffer[0x24]);
+    ptrInputState.touchPoint2.y = (touchpad2Raw & 0xFFF00000) >> 20;
+    ptrInputState.touchPoint2.x = (touchpad2Raw & 0x000FFF00) >> 8;
+    ptrInputState.touchPoint2.down = (touchpad2Raw & (1 << 7)) == 0;
+    ptrInputState.touchPoint2.id = (touchpad2Raw & 127);
+
+    // Evaluate headphone input
+    ptrInputState.headPhoneConnected = hidInBuffer[0x35] & 0x01;
+
+    // Trigger force feedback
+    ptrInputState.leftTriggerFeedback = hidInBuffer[0x2A];
+    ptrInputState.rightTriggerFeedback = hidInBuffer[0x29];
+
+    // Battery
+    ptrInputState.battery.chargin = (hidInBuffer[0x35] & 0x08) ? true : false;
+    ptrInputState.battery.fullyCharged = (hidInBuffer[0x36] & 0x20) ? true : false;
+    ptrInputState.battery.level = (hidInBuffer[0x36] & 0x0F);
+}

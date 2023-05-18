@@ -1,0 +1,17 @@
+.dub
+dub.selections.json
+docs.json
+__dummy.html
+docs/
+/ds5w
+ds5w.so
+ds5w.dylib
+ds5w.dll
+ds5w.a
+ds5w.lib
+ds5w-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

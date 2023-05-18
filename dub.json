@@ -1,0 +1,10 @@
+{
+	"authors": [
+		"user"
+	],
+	"copyright": "Copyright © 2023, user",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "ds5w",
+	"libs": ["hid"]
+}
