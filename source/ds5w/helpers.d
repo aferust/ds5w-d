@@ -33,15 +33,3 @@ Color color_R8G8B8_UCHAR_A32_FLOAT(ubyte r, ubyte g, ubyte b, float a)
 {
     return Color(cast(ubyte)(r * a), cast(ubyte)(g * a), cast(ubyte)(b * a));
 }
-
-import core.stdc.stdlib : malloc, free;
-
-T[] mallocSlice(T)(size_t len)
-{
-    return (cast(T*) malloc(len * T.sizeof))[0 .. len];
-}
-
-void freeSlice(T)(const(T)[] slice) nothrow @nogc
-{
-    free(cast(void*)(slice.ptr)); // const cast here
-}

@@ -9,6 +9,8 @@
 */
 module ds5w.dswapi;
 
+@nogc nothrow:
+
 bool DS5W_SUCCESS(BOOL)(BOOL expr)
 {
     return expr == DS5W_ReturnValue.OK;

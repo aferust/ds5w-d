@@ -36,8 +36,7 @@ import ds5w.ds5input;
 import ds5w.ds5output;
 
 import core.stdc.stddef : wchar_t;
-import core.stdc.stdlib;
-import core.stdc.string;
+import core.stdc.stdlib : alloca;
 
 import core.sys.windows.windows;
 import core.sys.windows.setupapi;
@@ -204,9 +203,6 @@ DS5W_ReturnValue enumDevices(DeviceEnumInfo[] devInfoArr, size_t* requiredLength
 
             // Increment index
             ifIndex++;
-
-            // Free device from stack
-            //_freea(devicePath);
         }
 
         // Increment index
@@ -446,7 +442,7 @@ DS5W_ReturnValue setDeviceOutputState(DeviceContext* ptrContext, DS5OutputState*
     }
     else
     {
-        // The usb input report is 48 Bytes long
+        // The usb input report is 48 or 64 Bytes long for DS_REGULAR and DS_EDGE
         if (ptrContext.variant == DEVICE_VARIANT.DS_EDGE)
             outputReportLength = 64;
         else

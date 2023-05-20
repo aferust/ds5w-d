@@ -63,7 +63,7 @@ struct HIDP_CAPS
 
 alias PHIDP_CAPS = HIDP_CAPS*;
 
-extern (C):
+@nogc nothrow extern (C):
 
 ubyte HidD_GetAttributes(
     HANDLE HidDeviceObject,
