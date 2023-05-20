@@ -12,6 +12,14 @@ import core.stdc.stddef : wchar_t;
 	Licensed under the MIT License (To be found in repository root directory)
 */
 
+enum PSVENDOR = 0x054C;
+
+enum DEVICE_VARIANT : uint
+{
+    DS_REGULAR = 0x0CE6,
+    DS_EDGE = 0x0DF2
+}
+
 /// <summary>
 /// Enum for device connection type
 /// </summary>
@@ -50,6 +58,11 @@ struct DeviceEnumInfo
     }
 
     Internal _internal;
+
+    /// <summary>
+    /// DS_REGULAR or DS_EDGE
+    /// </summary>
+    DEVICE_VARIANT variant;
 }
 
 /// <summary>
@@ -89,4 +102,9 @@ struct DeviceContext
     }
 
     Internal _internal;
+
+    /// <summary>
+    /// DS_REGULAR or DS_EDGE
+    /// </summary>
+    DEVICE_VARIANT variant;
 }

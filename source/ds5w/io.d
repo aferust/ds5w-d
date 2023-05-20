@@ -42,10 +42,6 @@ import core.stdc.string;
 import core.sys.windows.windows;
 import core.sys.windows.setupapi;
 
-enum PSVENDOR = 0x054C;
-enum DS_REGULAR = 0x0CE6;
-enum DS_EDGE = 0x0DF2;
-
 /// <summary>
 /// Enumerate all ds5 deviced connected to the computer
 /// </summary>
@@ -131,7 +127,8 @@ DS5W_ReturnValue enumDevices(DeviceEnumInfo[] devInfoArr, size_t* requiredLength
                 }
 
                 // Check if ids match
-                if (vendorId == PSVENDOR && (productId == DS_REGULAR || productId == DS_EDGE))
+                if (vendorId == PSVENDOR &&
+                    (productId == DEVICE_VARIANT.DS_REGULAR || productId == DEVICE_VARIANT.DS_EDGE))
                 {
                     debug
                     {
@@ -166,7 +163,9 @@ DS5W_ReturnValue enumDevices(DeviceEnumInfo[] devInfoArr, size_t* requiredLength
                             debug
                             {
                                 import core.stdc.stdio : printf;
+                                import std.stdio : writeln;
 
+                                writeln(deviceCaps);
                                 printf("%ls\n", ptrInfo._internal.path.ptr);
                             }
                             // Check for device connection type
@@ -189,6 +188,8 @@ DS5W_ReturnValue enumDevices(DeviceEnumInfo[] devInfoArr, size_t* requiredLength
                                     // Device found and valid -> Inrement index
                                     inputArrIndex++;
                                 }
+
+                                ptrInfo.variant = cast(DEVICE_VARIANT) productId;
                             }
                         }
 
@@ -264,8 +265,9 @@ DS5W_ReturnValue initDeviceContext(DeviceEnumInfo* ptrEnumInfo, DeviceContext* p
     ptrContext._internal.connected = true;
     ptrContext._internal.connection = ptrEnumInfo._internal.connection;
     ptrContext._internal.deviceHandle = deviceHandle;
-    wcscpy_s(ptrContext._internal.devicePath.ptr, 260, ptrEnumInfo._internal.path.ptr);
-
+    //wcscpy_s(ptrContext._internal.devicePath.ptr, 260, ptrEnumInfo._internal.path.ptr);
+    ptrContext._internal.devicePath[] = ptrEnumInfo._internal.path[];
+    ptrContext.variant = ptrEnumInfo.variant; // Regular or Edge
     // Get input report length
     ushort reportLength = 0;
     if (ptrContext._internal.connection == DeviceConnection.BT)
@@ -445,7 +447,10 @@ DS5W_ReturnValue setDeviceOutputState(DeviceContext* ptrContext, DS5OutputState*
     else
     {
         // The usb input report is 48 Bytes long
-        outputReportLength = 48;
+        if (ptrContext.variant == DEVICE_VARIANT.DS_EDGE)
+            outputReportLength = 64;
+        else
+            outputReportLength = 48;
     }
 
     // Cleat all input data
@@ -482,8 +487,14 @@ DS5W_ReturnValue setDeviceOutputState(DeviceContext* ptrContext, DS5OutputState*
     }
 
     // Write to controller
-    if (!WriteFile(ptrContext._internal.deviceHandle, ptrContext._internal.hidBuffer.ptr, outputReportLength, null, null))
+    if (!WriteFile(ptrContext._internal.deviceHandle, ptrContext._internal.hidBuffer.ptr, outputReportLength, NULL, NULL))
     {
+        debug
+        {
+            import std.stdio : writeln;
+
+            writeln(GetLastErrorAsString());
+        }
         // Close handle and set error state
         CloseHandle(ptrContext._internal.deviceHandle);
         ptrContext._internal.deviceHandle = null;

@@ -63,10 +63,7 @@ int main()
                 break;
             }
 
-            //if (inState.leftStick.x != 0 || inState.leftStick.y)
-            {
-                writefln("Left: x = %d, y = %d", inState.leftStick.x, inState.leftStick.y);
-            }
+            writefln("Left: x = %d, y = %d", inState.leftStick.x, inState.leftStick.y);
 
             DS5OutputState outState;
 
@@ -74,12 +71,15 @@ int main()
             outState.leftRumble = inState.leftTrigger;
             outState.rightRumble = inState.rightTrigger;
 
+            if (inState.leftTrigger > 20)
+                outState.lightbar = Color(255, 0, 0);
+
             // Send output to the controller
             setDeviceOutputState(&con, &outState);
         }
         else
         {
-            reconnectDevice(&con);
+            //reconnectDevice(&con);
         }
     }
 
