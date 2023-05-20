@@ -1,3 +1,27 @@
+# DualSense on Windows [API]
+![](https://raw.githubusercontent.com/Ohjurot/DualSense-Windows/main/Doc/GitHub_readme/header.png)
+
+
+
+- Windows API for the PS5 DualSense controller. Ported from [the C++ codebase of Ludwig Füchsl](https://github.com/Ohjurot/DualSense-Windows/) to dlang, and published with his permission. This API will help you using the DualSense controller in your windows D Applications / Projects.
+- DS5-Edge support has been added, unlike the original C++ repo.
+
+## Features
+
+- Reading all button input from the controller
+- Reading the analog sticks and analog triggers
+- Reading the two finger touch positions
+- Reading the Accelerometer and Gyroscope
+- Using the haptic feedback for default rumbleing 
+- Controlling the adaptive triggers (3 Types of effects) and reading back the users force while active
+- Controlling the RGB color of the lightbar
+- Setting the player indication LEDs and the microphone LED
+
+## Using the API
+
+This is the minimal example on how to use the library:
+
+```d
 import std.stdio;
 import core.stdc.string;
 
@@ -79,7 +103,7 @@ int main()
         }
         else
         {
-            //reconnectDevice(&con);
+            reconnectDevice(&con);
         }
     }
 
@@ -89,3 +113,7 @@ int main()
     // Return zero
     return 0;
 }
+```
+## For docs and further referencing
+- refer to the test folder
+- visit [the original C++ repo](https://github.com/Ohjurot/DualSense-Windows/)

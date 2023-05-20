@@ -1,10 +1,13 @@
 {
-	"authors": [
-		"user"
-	],
-	"copyright": "Copyright © 2023, user",
-	"description": "A minimal D application.",
-	"license": "proprietary",
-	"name": "ds5w",
+    "name": "ds5w",
+    "authors": [
+        "Ludwig Füchsl",
+        "Ferhat Kurtulmuş"
+    ],
+    "description": "Windows API for the PS5 DualSense (+Edge) controller. Ported from C++ codebase to dlang. This API will help you using the DualSense controller in your windows D Applications / Projects.",
+    "license": "MIT",
+    "version": "0.0.1",
+    "targetType": "library",
+    "sourceFiles": ["source/ds5w/package.d"],
 	"libs": ["hid"]
 }

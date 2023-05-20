@@ -1,0 +1,6 @@
+{
+	"name": "testds5w",
+    "dependencies": {
+        "ds5w": {"path": "../"}
+    }
+}

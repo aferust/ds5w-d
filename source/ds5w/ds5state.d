@@ -217,7 +217,7 @@ struct TriggerEffect
         /// <summary>
         /// For type == SectionResitance
         /// </summary>
-        struct Section
+        struct TSection
         {
             /// <summary>
             /// Start position of resistance
@@ -235,6 +235,7 @@ struct TriggerEffect
             ubyte[4] _pad;
         }
 
+        TSection Section;
         /// <summary>
         /// For type == EffectEx
         /// </summary>
