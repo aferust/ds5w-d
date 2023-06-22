@@ -30,6 +30,10 @@ enum DS5W_ISTATE_BTN_A_RIGHT_STICK = 0x80;
 enum DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO = 0x01;
 enum DS5W_ISTATE_BTN_B_PAD_BUTTON = 0x02;
 enum DS5W_ISTATE_BTN_B_MIC_BUTTON = 0x04;
+enum DS5W_ISTATE_BTN_B_FN_LEFT_BUTTON = 0x10; // only for edge controllers
+enum DS5W_ISTATE_BTN_B_FN_RIGHT_BUTTON = 0x20; // only for edge controllers
+enum DS5W_ISTATE_BTN_B_BOTTOM_LEFT_BUTTON = 0x40; // only for edge controllers
+enum DS5W_ISTATE_BTN_B_BOTTOM_RIGHT_BUTTON = 0x80; // only for edge controllers
 
 enum DS5W_OSTATE_PLAYER_LED_LEFT = 0x01;
 enum DS5W_OSTATE_PLAYER_LED_MIDDLE_LEFT = 0x02;
@@ -68,12 +72,14 @@ alias Vector3 = Vec3;
 /// <summary>
 /// RGB Color
 /// </summary>
-struct Color
+package struct Color
 {
     ubyte r;
     ubyte g;
     ubyte b;
 }
+
+public alias DSColor = Color;
 
 /// <summary>
 /// Touchpad state

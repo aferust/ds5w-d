@@ -34,7 +34,7 @@ int main()
         }
         else
         {
-            "Wired (USB) controller (".writeln;
+            "(USB) controller (".writeln;
         }
 
         writeln(infos[i]._internal.path ~ ")");
