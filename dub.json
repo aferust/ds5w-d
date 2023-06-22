@@ -6,7 +6,7 @@
     ],
     "description": "Windows API for the PS5 DualSense (+Edge) controller. Ported from C++ codebase to dlang. This API will help you using the DualSense controller in your windows D Applications / Projects.",
     "license": "MIT",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "targetType": "library",
     "sourceFiles": ["source/ds5w/package.d"],
 	"libs": ["hid"]
